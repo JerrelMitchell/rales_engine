@@ -1,5 +1,6 @@
 # Rales Engine
-# Manoj Panta & Jerrel Mitchell
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/JerrelMitchell/rales_engine.svg?columns=all)](https://waffle.io/JerrelMitchell/rales_engine)
+Manoj Panta & Jerrel Mitchell
 
 ## Project Description
 > In this project, you will use Rails and ActiveRecord to build a JSON API which exposes the SalesEngine data schema.
