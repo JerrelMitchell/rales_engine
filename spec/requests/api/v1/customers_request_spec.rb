@@ -110,50 +110,20 @@ describe "Customers API" do
     expect(customers.count).to eq(3)
     expect(customers.first["first_name"]).to eq(name)
   end
-#
-#   it "sends allcustomers with find all  method with name params" do
-#
-#     create_list(:merchant, 1)
-#     name = Merchant.last.name
-#
-#     get "/api/v1/merchants/find_all?name=#{name}"
-#
-#     merchants = JSON.parse(response.body)
-#
-#
-#     expect(response).to be_successful
-#     expect(merchants.count).to eq(1)
-#     expect(merchants.first["name"]).to eq(name)
-#   end
-#   it "sends a random merchant" do
-#
-#     create_list(:merchant, 1)
-#     name = Merchant.first.name
-#
-#     get "/api/v1/merchants/random.json"
-#
-#     merchant = JSON.parse(response.body)
-#
-#
-#     expect(response).to be_successful
-#     expect(merchant["name"]).to eq(name)
-#   end
-#
-#   it "sends all items for a merchant" do
-#     merchant1 = Merchant.create(name: "Manoj")
-#     merchant2 = Merchant.create(name: "Jerrel")
-#     merchant1.items.create(name: "Twix")
-#     merchant1.items.create(name: "M&Ms")
-#     merchant2.items.create(name: "Failure")
-#     merchant2.items.create(name: "Failure2")
-#
-#     get "/api/v1/merchants/#{merchant1.id}/items"
-#
-#     items = JSON.parse(response.body)
-#
-#     expect(response).to be_successful
-#     expect(items.count).to eq(2)
-#     expect(items.first["name"]).to eq("Twix")
-#     expect(items.last["name"]).to_not eq("Failure2")
-#   end
+
+
+  it "sends a random customer" do
+
+    create_list(:customer, 1)
+    name = Customer.first.first_name
+
+    get "/api/v1/customers/random.json"
+
+    customer = JSON.parse(response.body)
+
+
+    expect(response).to be_successful
+    expect(customer["first_name"]).to eq(name)
+  end
+
 end
