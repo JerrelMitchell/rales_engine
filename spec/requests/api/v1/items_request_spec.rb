@@ -122,7 +122,7 @@ describe "Items API" do
     invoice = Invoice.create(merchant: merchant, customer: customer, status: "pending")
     item = merchant.items.create(name: "Twix")
     invoice_item1 = InvoiceItem.create(invoice: invoice, item: item, quantity: 1, unit_price: 200)
-    invoice_item2 = InvoiceItem.create(invoice: invoice, item: item, quantity: 3, unit_price: 500)
+    InvoiceItem.create(invoice: invoice, item: item, quantity: 3, unit_price: 500)
     invoice_item3 = InvoiceItem.create(invoice: invoice, item: item, quantity: 2, unit_price: 800)
 
     get "/api/v1/items/#{item.id}/invoice_items"
@@ -132,5 +132,6 @@ describe "Items API" do
     expect(response).to be_successful
     expect(invoice_items.count).to eq(3)
     expect(invoice_items.first["id"]).to eq(invoice_item1.id)
+    expect(invoice_items.last["id"]).to eq(invoice_item3.id)
   end
 end
