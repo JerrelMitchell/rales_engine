@@ -111,4 +111,22 @@ describe "Items API" do
     expect(response).to be_successful
     expect(merchant["name"]).to eq(name)
   end
+
+  it "sends all items for a merchant" do
+    merchant1 = Merchant.create(name: "Manoj")
+    merchant2 = Merchant.create(name: "Jerrel")
+    merchant1.items.create(name: "Twix")
+    merchant1.items.create(name: "M&Ms")
+    merchant2.items.create(name: "Failure")
+    merchant2.items.create(name: "Failure2")
+
+    get "/api/v1/merchants/#{merchant1.id}/items"
+
+    items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(items.count).to eq(2)
+    expect(items.first["name"]).to eq("Twix")
+    expect(items.last["name"]).to_not eq("Failure2")
+  end
 end

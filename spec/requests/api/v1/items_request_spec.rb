@@ -102,4 +102,17 @@ describe "Items API" do
     expect(response).to be_successful
     expect(item["name"]).to eq(new_items.first.name)
   end
+
+  it "sends merchant for an item" do
+    merchant1 = Merchant.create(name: "Manoj")
+    Merchant.create(name: "Jerrel")
+    item1 = merchant1.items.create(name: "Twix")
+
+    get "/api/v1/items/#{item1.id}/merchant"
+
+    merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(merchant["name"]).to eq("Manoj")
+  end
 end
