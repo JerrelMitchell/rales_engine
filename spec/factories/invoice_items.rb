@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :invoice_item do
-    item 1
-    invoice 1
+    item
+    invoice
     quantity 10
     unit_price 1500
   end
