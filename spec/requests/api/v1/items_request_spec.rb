@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe "Items API" do
-  it "sends a list of items" do
+  it "returns a list of items" do
     create_list(:item, 3)
 
     get '/api/v1/items'
@@ -13,7 +13,7 @@ describe "Items API" do
     expect(items.count).to eq(3)
   end
 
-  it "shows a single item with its id" do
+  it "returns a single item with its id" do
     id = create(:item).id
 
     get "/api/v1/items/#{id}"
@@ -35,10 +35,24 @@ describe "Items API" do
     expect(item["id"]).to eq(new_item.id)
   end
 
-  it "can search a single item by valid name" do
+  it "can search a single item by case insensitive name" do
     new_item = create(:item)
 
-    get "/api/v1/items/find?name=Twix"
+    get "/api/v1/items/find?name=#{new_item.name}"
+
+    item = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(item["name"]).to eq(new_item.name)
+
+    get "/api/v1/items/find?name=#{new_item.name.downcase}"
+
+    item = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(item["name"]).to eq(new_item.name)
+
+    get "/api/v1/items/find?name=#{new_item.name.upcase}"
 
     item = JSON.parse(response.body)
 
@@ -122,7 +136,7 @@ describe "Items API" do
     invoice = Invoice.create(merchant: merchant, customer: customer, status: "pending")
     item = merchant.items.create(name: "Twix")
     invoice_item1 = InvoiceItem.create(invoice: invoice, item: item, quantity: 1, unit_price: 200)
-    invoice_item2 = InvoiceItem.create(invoice: invoice, item: item, quantity: 3, unit_price: 500)
+    InvoiceItem.create(invoice: invoice, item: item, quantity: 3, unit_price: 500)
     invoice_item3 = InvoiceItem.create(invoice: invoice, item: item, quantity: 2, unit_price: 800)
 
     get "/api/v1/items/#{item.id}/invoice_items"
@@ -132,5 +146,6 @@ describe "Items API" do
     expect(response).to be_successful
     expect(invoice_items.count).to eq(3)
     expect(invoice_items.first["id"]).to eq(invoice_item1.id)
+    expect(invoice_items.last["id"]).to eq(invoice_item3.id)
   end
 end
