@@ -103,7 +103,7 @@ describe "Items API" do
     expect(item["name"]).to eq(new_items.first.name)
   end
 
-  it "sends merchant for an item" do
+  it "returns single merchant associated with an item" do
     merchant1 = Merchant.create(name: "Manoj")
     Merchant.create(name: "Jerrel")
     item1 = merchant1.items.create(name: "Twix")
@@ -114,5 +114,23 @@ describe "Items API" do
 
     expect(response).to be_successful
     expect(merchant["name"]).to eq("Manoj")
+  end
+
+  it "returns all invoice_items associated with an item" do
+    merchant = Merchant.create(name: "Manoj")
+    customer = Customer.create(first_name: "Jerrel", last_name: "Mitchell")
+    invoice = Invoice.create(merchant: merchant, customer: customer, status: "pending")
+    item = merchant.items.create(name: "Twix")
+    invoice_item1 = InvoiceItem.create(invoice: invoice, item: item, quantity: 1, unit_price: 200)
+    invoice_item2 = InvoiceItem.create(invoice: invoice, item: item, quantity: 3, unit_price: 500)
+    invoice_item3 = InvoiceItem.create(invoice: invoice, item: item, quantity: 2, unit_price: 800)
+
+    get "/api/v1/items/#{item.id}/invoice_items"
+
+    invoice_items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(invoice_items.count).to eq(3)
+    expect(invoice_items.first["id"]).to eq(invoice_item1.id)
   end
 end
