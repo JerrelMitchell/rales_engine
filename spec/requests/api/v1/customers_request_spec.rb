@@ -101,6 +101,7 @@ describe "Customers API" do
 
   it "returns a random customer" do
     create_list(:customer, 1)
+    
     name = Customer.first.first_name
 
     get "/api/v1/customers/random.json"
