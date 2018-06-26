@@ -40,6 +40,35 @@ describe "Items API" do
     expect(merchant["name"]).to eq('King Soopers')
   end
 
+  it "sends a merchant with find method with id params" do
+
+    id = create(:merchant).id
+
+    get "/api/v1/merchants/find?id=#{id}"
+
+    merchant = JSON.parse(response.body)
+
+
+    expect(response).to be_successful
+    expect(merchant["id"]).to eq(id)
+  end
+
+  # it "sends a merchant with find method with created at params" do
+  #
+  #   created_at = "2012-03-27 14:54:09"
+  #   updated_at = "2012-03-27 14:54:09"
+  #
+  #   merchant = Merchant.create(name: 'manoj', created_at: created_at, updated_at: updated_at)
+  #
+  #   get "/api/v1/merchants/find?created_at=#{created_at}"
+  #
+  #   merchant = JSON.parse(response.body)
+  #
+  #
+  #   expect(response).to be_successful
+  #   expect(merchant["created_at"]).to eq(created_at)
+  # end
+
   it "sends all merchants with find all  method with name params" do
 
     create_list(:merchant, 3)
@@ -53,5 +82,33 @@ describe "Items API" do
     expect(response).to be_successful
     expect(merchants.count).to eq(3)
     expect(merchants.first["name"]).to eq(name)
+  end
+
+  it "sends all merchants with find all  method with name params" do
+
+    create_list(:merchant, 1)
+    name = Merchant.last.name
+
+    get "/api/v1/merchants/find_all?name=#{name}"
+
+    merchants = JSON.parse(response.body)
+
+
+    expect(response).to be_successful
+    expect(merchants.count).to eq(1)
+    expect(merchants.first["name"]).to eq(name)
+  end
+  it "sends a random merchant" do
+
+    create_list(:merchant, 1)
+    name = Merchant.first.name
+
+    get "/api/v1/merchants/random.json"
+
+    merchant = JSON.parse(response.body)
+
+
+    expect(response).to be_successful
+    expect(merchant["name"]).to eq(name)
   end
 end
