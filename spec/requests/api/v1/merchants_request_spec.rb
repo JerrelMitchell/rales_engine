@@ -30,7 +30,7 @@ describe "Items API" do
 
     name = create(:merchant).name
 
-    get "/api/v1/merchants/find?name=#{name}.json"
+    get "/api/v1/merchants/find?name=#{name}"
 
     merchant = JSON.parse(response.body)
 
@@ -38,5 +38,20 @@ describe "Items API" do
     expect(response).to be_successful
     expect(merchant["name"]).to eq(name)
     expect(merchant["name"]).to eq('King Soopers')
+  end
+
+  it "sends all merchants with find all  method with name params" do
+
+    create_list(:merchant, 3)
+    name = Merchant.last.name
+
+    get "/api/v1/merchants/find_all?name=#{name}"
+
+    merchants = JSON.parse(response.body)
+
+
+    expect(response).to be_successful
+    expect(merchants.count).to eq(3)
+    expect(merchants.first["name"]).to eq(name)
   end
 end
