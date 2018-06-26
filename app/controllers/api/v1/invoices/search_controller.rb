@@ -1,10 +1,10 @@
-class Api::V1::Customers::SearchController < ApplicationController
+class Api::V1::Invoices::SearchController < ApplicationController
   def show
-    render json: Customer.find_by(search_params)
+    render json: Invoice.find_by(search_params)
   end
 
   def index
-    render json: Customer.where(search_params)
+    render json: Invoice.where(search_params)
 
   end
 
