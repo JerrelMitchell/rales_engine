@@ -16,12 +16,27 @@ describe "Items API" do
 
     id = create(:merchant).id
 
-    get "/api/v1/merchants/#{id}"
+    get "/api/v1/merchants/#{id}.json"
 
     merchant = JSON.parse(response.body)
 
 
     expect(response).to be_successful
     expect(merchant["id"]).to eq(id)
+    expect(merchant["name"]).to eq('King Soopers')
+  end
+
+  it "sends a merchant with find method with name params" do
+
+    name = create(:merchant).name
+
+    get "/api/v1/merchants/find?name=#{name}.json"
+
+    merchant = JSON.parse(response.body)
+
+
+    expect(response).to be_successful
+    expect(merchant["name"]).to eq(name)
+    expect(merchant["name"]).to eq('King Soopers')
   end
 end
