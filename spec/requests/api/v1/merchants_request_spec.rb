@@ -40,6 +40,20 @@ describe "Items API" do
     expect(merchant["name"]).to eq('King Soopers')
   end
 
+  it "sends a merchant with find method with name params downcased" do
+
+    name = create(:merchant).name
+
+    get "/api/v1/merchants/find?name=#{name.downcase}"
+
+    merchant = JSON.parse(response.body)
+
+
+    expect(response).to be_successful
+    expect(merchant["name"]).to eq(name)
+    expect(merchant["name"]).to eq('King Soopers')
+  end
+
   it "sends a merchant with find method with id params" do
 
     id = create(:merchant).id
@@ -53,21 +67,21 @@ describe "Items API" do
     expect(merchant["id"]).to eq(id)
   end
 
-  # it "sends a merchant with find method with created at params" do
-  #
-  #   created_at = "2012-03-27 14:54:09"
-  #   updated_at = "2012-03-27 14:54:09"
-  #
-  #   merchant = Merchant.create(name: 'manoj', created_at: created_at, updated_at: updated_at)
-  #
-  #   get "/api/v1/merchants/find?created_at=#{created_at}"
-  #
-  #   merchant = JSON.parse(response.body)
-  #
-  #
-  #   expect(response).to be_successful
-  #   expect(merchant["created_at"]).to eq(created_at)
-  # end
+  xit "sends a merchant with find method with created at params" do
+
+    created_at = "2012-03-27 14:54:09"
+    updated_at = "2012-03-27 14:54:09"
+
+    merchant = Merchant.create(name: 'manoj', created_at: created_at, updated_at: updated_at)
+
+    get "/api/v1/merchants/find?created_at=#{created_at}"
+
+    merchant = JSON.parse(response.body)
+
+
+    expect(response).to be_successful
+    expect(merchant["created_at"]).to eq(created_at)
+  end
 
   it "sends all merchants with find all  method with name params" do
 
