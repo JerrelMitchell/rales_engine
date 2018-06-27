@@ -124,4 +124,16 @@ describe "Invoices API" do
     expect(response).to be_successful
     expect(invoice["status"]).to eq(status)
   end
+
+  it "returns all the transactions for a invoice" do
+    invoice = Invoice.create
+    transaction_id = Transaction.create(invoice: invoice).id
+
+    get "/api/v1/invoices/#{Invoice.last.id}/transactions"
+
+    transactions = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(transactions.first.id).to eq(transaction_id)
+  end
 end
