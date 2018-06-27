@@ -159,4 +159,29 @@ describe "Invoices API" do
     expect(invoice_items.first["id"]).to eq(invoice_item.id)
     expect(invoice_items.last["id"]).to eq(invoice_item2.id)
   end
+
+  it "returns all the items for a invoice" do
+    merchant = Merchant.create
+    customer = Customer.create
+
+    item = Item.create
+    item1 = Item.create
+    item2 = Item.create
+
+    invoice = merchant.invoices.create(customer: customer)
+
+    invoice_item = InvoiceItem.create(invoice: invoice, item: item)
+    invoice_item1 = InvoiceItem.create(invoice: invoice, item: item1)
+    invoice_item2 = InvoiceItem.create(invoice: invoice, item: item2)
+
+    get "/api/v1/invoices/#{Invoice.last.id}/items"
+
+    items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+
+    expect(items.count).to eq(3)
+    expect(items.first["id"]).to eq(item.id)
+    expect(items.last["id"]).to eq(item2.id)
+  end
 end
