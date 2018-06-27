@@ -119,6 +119,25 @@ describe "Items API" do
     expect(items.last["name"]).to_not eq("Failure2")
   end
 
+  it "returns revenue for a merchant" do
+
+    merchant = Merchant.create(name: "King Soopers")
+    customer = Customer.create()
+
+    invoice = merchant.invoices.create!(customer: customer)
+    item = Item.create
+    invoice_item = invoice.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice_item = invoice.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice.transactions.create!(result: 'success')
+
+    get "/api/v1/merchants/#{merchant.id}/revenue"
+
+    revenue = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(revenue['revenue']).to eq(2800)
+  end
+
   xit 'returns most revenue for x amount of merchants' do
     merchant1 = Merchant.create(name: "Manoj")
     merchant2 = Merchant.create(name: "Jerrel")
