@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       get 'merchants/random',   to: 'merchants/random#show'
       resources :merchants do
         resources :items, only: [:index]
+        resources :invoices, only: [:index]
       end
 
       get 'items/find',     to: 'items/search#show'
@@ -37,8 +38,6 @@ Rails.application.routes.draw do
       resources :invoice_items, only: [:index, :show] do
         get 'invoice', to: 'invoice_items/invoices#show'
         get 'item', to: 'invoice_items/items#show'
-
-
       end
 
       get 'invoices/find',     to: 'invoices/search#show'
@@ -46,7 +45,7 @@ Rails.application.routes.draw do
       get 'invoices/random',   to: 'invoices/random#show'
       resources :invoices, only: [:index, :show] do
         get "transactions", to: 'invoices/transactions#index'
-        get "invoiceitems", to: 'invoices/invoiceitems#index'
+        get "invoice_items", to: 'invoices/invoice_items#index'
         get "items", to: 'invoices/items#index'
         get "customer", to: 'invoices/customers#show'
         get "merchant", to: 'invoices/merchants#show'

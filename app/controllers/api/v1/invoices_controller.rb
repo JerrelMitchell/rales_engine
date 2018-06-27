@@ -1,6 +1,10 @@
 class Api::V1::InvoicesController < ApplicationController
   def index
-    render json: Invoice.all
+    if params[:merchant_id]
+      render json: Merchant.find(params[:merchant_id]).invoices
+    else
+      render json: Invoice.all
+    end
   end
 
   def show

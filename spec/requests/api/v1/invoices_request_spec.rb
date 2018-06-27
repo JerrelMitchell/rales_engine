@@ -84,21 +84,21 @@ describe "Invoices API" do
     expect(invoice["status"]).to eq(status)
   end
 
-  # xit "returns an invoice with find method with created at params" do
-  #
-  #   created_at = "2012-03-27 14:54:09"
-  #   updated_at = "2012-03-27 14:54:09"
-  #
-  #   invoice = Customer.create(first_name: 'manoj',last_name: 'panta' created_at: created_at, updated_at: updated_at)
-  #
-  #   get "/api/v1/invoices/find?created_at=#{created_at}"
-  #
-  #   invoice = JSON.parse(response.body)
-  #
-  #
-  #   expect(response).to be_successful
-  #   expect(invoice["created_at"]).to eq(created_at)
-  # end
+  xit "can search a single invoice by valid timestamps" do
+
+    created_at = "2012-03-27 14:54:09"
+    updated_at = "2012-03-27 14:54:09"
+
+    Customer.create(first_name: 'manoj',last_name: 'panta', created_at: created_at, updated_at: updated_at)
+
+    get "/api/v1/invoices/find?created_at=#{created_at}"
+
+    invoice = JSON.parse(response.body)
+
+
+    expect(response).to be_successful
+    expect(invoice["created_at"]).to eq(created_at)
+  end
 
   it "returns all invoices with find all method with name params" do
     new_invoices = create_list(:invoice, 3)
@@ -147,10 +147,10 @@ describe "Invoices API" do
     invoice = merchant.invoices.create(customer: customer)
 
     invoice_item = InvoiceItem.create(invoice: invoice, item: item)
-    invoice_item1 = InvoiceItem.create(invoice: invoice, item: item)
+    InvoiceItem.create(invoice: invoice, item: item)
     invoice_item2 = InvoiceItem.create(invoice: invoice, item: item)
 
-    get "/api/v1/invoices/#{Invoice.last.id}/invoiceitems"
+    get "/api/v1/invoices/#{Invoice.last.id}/invoice_items"
 
     invoice_items = JSON.parse(response.body)
 
@@ -160,29 +160,25 @@ describe "Invoices API" do
     expect(invoice_items.last["id"]).to eq(invoice_item2.id)
   end
 
-  xit "returns all the items for a invoice" do
+  it "returns all the items for a invoice" do
     merchant = Merchant.create
     customer = Customer.create
-
-    item = Item.create
-    item1 = Item.create
-    item2 = Item.create
-
-    invoice = merchant.invoices.create(customer: customer)
-
-    invoice_item = invoice.invoice_items.create!(item: item)
-    invoice_item1 = invoice.invoice_items.create!(item: item1)
-    invoice_item2 = invoice.invoice_items.create!(item: item2)
+    item1 = merchant.items.create(name: "Option1", description: "This is an option", unit_price: 100)
+    item2 = merchant.items.create(name: "Option2", description: "This is another option", unit_price: 200)
+    item3 = merchant.items.create(name: "Option3", description: "This is the last option", unit_price: 300)
+    invoice = merchant.invoices.create(customer: customer, merchant: merchant)
+    invoice.invoice_items.create!(item: item1)
+    invoice.invoice_items.create!(item: item2)
+    invoice.invoice_items.create!(item: item3)
 
     get "/api/v1/invoices/#{invoice.id}/items"
 
     items = JSON.parse(response.body)
 
     expect(response).to be_successful
-
     expect(items.count).to eq(3)
-    expect(items.first["id"]).to eq(item.id)
-    expect(items.last["id"]).to eq(item2.id)
+    expect(items.first["id"]).to eq(item1.id)
+    expect(items.last["id"]).to eq(item3.id)
   end
 
   it "returns associated customer for  an invoice" do
