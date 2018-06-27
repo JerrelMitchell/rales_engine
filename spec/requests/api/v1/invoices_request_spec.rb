@@ -136,6 +136,6 @@ describe "Invoices API" do
     transactions = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(transactions.first.id).to eq(transaction_id)
+    expect(transactions.first["id"]).to eq(transaction_id)
   end
 end
