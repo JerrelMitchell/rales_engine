@@ -160,7 +160,7 @@ describe "Invoices API" do
     expect(invoice_items.last["id"]).to eq(invoice_item2.id)
   end
 
-  it "returns all the items for a invoice" do
+  xit "returns all the items for a invoice" do
     merchant = Merchant.create
     customer = Customer.create
 
@@ -170,11 +170,11 @@ describe "Invoices API" do
 
     invoice = merchant.invoices.create(customer: customer)
 
-    invoice_item = InvoiceItem.create(invoice: invoice, item: item)
-    invoice_item1 = InvoiceItem.create(invoice: invoice, item: item1)
-    invoice_item2 = InvoiceItem.create(invoice: invoice, item: item2)
+    invoice_item = invoice.invoice_items.create!(item: item)
+    invoice_item1 = invoice.invoice_items.create!(item: item1)
+    invoice_item2 = invoice.invoice_items.create!(item: item2)
 
-    get "/api/v1/invoices/#{Invoice.last.id}/items"
+    get "/api/v1/invoices/#{invoice.id}/items"
 
     items = JSON.parse(response.body)
 
@@ -183,5 +183,20 @@ describe "Invoices API" do
     expect(items.count).to eq(3)
     expect(items.first["id"]).to eq(item.id)
     expect(items.last["id"]).to eq(item2.id)
+  end
+
+  it "returns associated customer for  an invoice" do
+    merchant = Merchant.create
+    customer = Customer.create
+
+    invoice = merchant.invoices.create(customer: customer)
+
+    get "/api/v1/invoices/#{invoice.id}/customer"
+
+    customer1 = JSON.parse(response.body)
+
+    expect(response).to be_successful
+
+    expect(customer1["id"]).to eq(customer.id)
   end
 end
