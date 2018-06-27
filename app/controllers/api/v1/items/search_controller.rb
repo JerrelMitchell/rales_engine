@@ -1,6 +1,10 @@
 class Api::V1::Items::SearchController < ApplicationController
   def show
-    render json: Item.find_by(search_params)
+    if params[:unit_price]
+      render json: Item.find_by(unit_price: (params[:unit_price].delete('.')))
+    else
+      render json: Item.find_by(search_params)
+    end
   end
 
   def index

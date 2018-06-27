@@ -25,7 +25,7 @@ describe "transactions API" do
   end
 
   it "returns a transaction with find method with credit_card_number params" do
-    credit_card_number = create(:transaction).credit_card_number
+    credit_card_number = create(:transaction).credit_card_number.to_s
 
     get "/api/v1/transactions/find?credit_card_number=#{credit_card_number}"
 
@@ -39,7 +39,7 @@ describe "transactions API" do
   it "returns all transactions with find all method with credit_card_number params" do
     create_list(:transaction, 3)
 
-    credit_card_number = Transaction.first.credit_card_number
+    credit_card_number = Transaction.first.credit_card_number.to_s
 
     get "/api/v1/transactions/find_all?credit_card_number=#{credit_card_number}"
 
@@ -51,10 +51,9 @@ describe "transactions API" do
     expect(transactions.last["credit_card_number"]).to eq(credit_card_number.to_s)
   end
 
-
   it "returns a random transaction" do
     create_list(:transaction, 1)
-    credit_card_number = Transaction.first.credit_card_number
+    credit_card_number = Transaction.first.credit_card_number.to_s
 
     get "/api/v1/transactions/random.json"
 
