@@ -135,7 +135,7 @@ describe "Items API" do
     revenue = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(revenue['revenue']).to eq(2800)
+    expect(revenue).to eq(11200)
   end
 
   xit 'returns most revenue for x amount of merchants' do
