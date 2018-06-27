@@ -70,21 +70,22 @@ describe "Customers API" do
     expect(response).to be_successful
     expect(customer["id"]).to eq(id)
   end
-  # xit "returns a customer with find method with created at params" do
-  #
-  #   created_at = "2012-03-27 14:54:09"
-  #   updated_at = "2012-03-27 14:54:09"
-  #
-  #   customer = Customer.create(first_name: 'manoj',last_name: 'panta' created_at: created_at, updated_at: updated_at)
-  #
-  #   get "/api/v1/customers/find?created_at=#{created_at}"
-  #
-  #   customer = JSON.parse(response.body)
-  #
-  #
-  #   expect(response).to be_successful
-  #   expect(customer["created_at"]).to eq(created_at)
-  # end
+
+  xit "can search a single customer by valid timestamps" do
+
+    created_at = "2012-03-27 14:54:09"
+    updated_at = "2012-03-27 14:54:09"
+
+    customer = Customer.create(first_name: 'manoj',last_name: 'panta', created_at: created_at, updated_at: updated_at)
+
+    get "/api/v1/customers/find?created_at=#{created_at}"
+
+    customer = JSON.parse(response.body)
+
+
+    expect(response).to be_successful
+    expect(customer["created_at"]).to eq(created_at)
+  end
 
   it "returns all customers with find all method with name params" do
     create_list(:customer, 3)
@@ -101,7 +102,7 @@ describe "Customers API" do
 
   it "returns a random customer" do
     create_list(:customer, 1)
-    
+
     name = Customer.first.first_name
 
     get "/api/v1/customers/random.json"

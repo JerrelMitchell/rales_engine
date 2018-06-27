@@ -62,7 +62,7 @@ describe "Items API" do
     expect(merchant["id"]).to eq(id)
   end
 
-  xit "returns a merchant with find method with created at params" do
+  xit "can search a single merchant by valid timestamps" do
     created_at = "2012-03-27 14:54:09"
     updated_at = "2012-03-27 14:54:09"
     Merchant.create(name: 'manoj', created_at: created_at, updated_at: updated_at)
