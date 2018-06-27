@@ -71,9 +71,9 @@ describe "transactions API" do
 
     get "/api/v1/transactions/#{transaction.id}/invoice"
 
-    invoice = JSON.parse(response.body)
+    invoice1 = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(invoice["id"]).to eq(invoice.id)
+    expect(invoice1["id"]).to eq(invoice.id)
   end
 end
