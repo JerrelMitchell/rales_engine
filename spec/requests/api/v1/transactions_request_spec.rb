@@ -32,7 +32,7 @@ describe "transactions API" do
     transaction = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(transaction["credit_card_number"]).to eq(credit_card_number)
+    expect(transaction["credit_card_number"]).to eq(credit_card_number.to_s)
   end
 
 
@@ -47,8 +47,8 @@ describe "transactions API" do
 
     expect(response).to be_successful
     expect(transactions.count).to eq(3)
-    expect(transactions.first["credit_card_number"]).to eq(credit_card_number)
-    expect(transactions.last["credit_card_number"]).to eq(credit_card_number)
+    expect(transactions.first["credit_card_number"]).to eq(credit_card_number.to_s)
+    expect(transactions.last["credit_card_number"]).to eq(credit_card_number.to_s)
   end
 
   it "returns a random transaction" do
@@ -60,7 +60,7 @@ describe "transactions API" do
     transaction = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(transaction["credit_card_number"]).to eq(credit_card_number)
+    expect(transaction["credit_card_number"]).to eq(credit_card_number.to_s)
   end
 
 end

@@ -79,7 +79,7 @@ describe "Items API" do
     item = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(item["unit_price"]).to eq(new_item.unit_price)
+    expect(item["unit_price"]).to eq(Money.new(new_item.unit_price).to_s)
   end
 
   xit "can search a single item by valid timestamps" do

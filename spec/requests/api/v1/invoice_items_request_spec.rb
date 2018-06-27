@@ -65,7 +65,7 @@ describe "Invoice Items API" do
     invoice_item = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(invoice_item["unit_price"]).to eq(new_invoice_item.unit_price)
+    expect(invoice_item["unit_price"]).to eq(Money.new(new_invoice_item.unit_price).to_s)
   end
 
   it "can search a single invoice_item by valid quantity" do

@@ -4,7 +4,11 @@ class Api::V1::InvoiceItems::SearchController < ApplicationController
   end
 
   def index
-    render json: InvoiceItem.where(search_params)
+    if params[:unit_price]
+      render json: InvoiceItem.find_by(unit_price: (params[:unit_price].delete('.')))
+    else
+      render json: InvoiceItem.where(search_params)
+    end
   end
 
   private

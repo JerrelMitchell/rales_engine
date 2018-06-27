@@ -117,4 +117,34 @@ describe "Items API" do
     expect(items.first["name"]).to eq("Twix")
     expect(items.last["name"]).to_not eq("Failure2")
   end
+
+  it 'returns most revenue for x amount of merchants' do
+    merchant1 = Merchant.create(name: "Manoj")
+    merchant2 = Merchant.create(name: "Jerrel")
+    merchant3 = Merchant.create(name: "Wow")
+    customer1 = Customer.create(first_name: "Dude", last_name: "Bruh")
+    item1 = merchant1.items.create(name: "M&Ms", unit_price: 300)
+    item2 = merchant2.items.create(name: "Failure", unit_price: 1250)
+    item3 = merchant2.items.create(name: "Failure2", unit_price: 5000)
+    item4 = merchant1.items.create(name: "Twix", unit_price: 100)
+    invoice1 = item1.invoices.create(customer: customer1, merchant: merchant1, status: 'successful')
+    invoice2 = item2.invoices.create(customer: customer1, merchant: merchant2, status: 'successful')
+    invoice3 = item3.invoices.create(customer: customer1, merchant: merchant1, status: 'cancelled')
+    invoice4 = item4.invoices.create(customer: customer1, merchant: merchant2, status: 'cancelled')
+    invoice_item1 = item1.invoice_items.create(invoice: invoice1, quantity: 1)
+    invoice_item2 = item2.invoice_items.create(invoice: invoice2, quantity: 1)
+    invoice_item3 = item3.invoice_items.create(invoice: invoice3, quantity: 1)
+    invoice_item4 = item4.invoice_items.create(invoice: invoice4, quantity: 1)
+
+    get "/api/v1/merchants/most_revenue?quantity=2"
+
+    merchants = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(merchants.count).to eq(2)
+    expect(merchants.first["name"]).to eq(merchant2.name)
+    expect(merchants.first["total_revenue"]).to eq(Money.new(invoice_items.unit_price).to_s)
+    expect(merchants.last["name"]).to eq(merchant1.name)
+    expect(merchants.last["total_revenue"]).to eq(invoice_items.unit_price)
+  end
 end
