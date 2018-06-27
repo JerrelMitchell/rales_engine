@@ -199,4 +199,19 @@ describe "Invoices API" do
 
     expect(customer1["id"]).to eq(customer.id)
   end
+
+  it "returns associated merchant for  an invoice" do
+    merchant = Merchant.create
+    customer = Customer.create
+
+    invoice = merchant.invoices.create(customer: customer)
+
+    get "/api/v1/invoices/#{invoice.id}/merchant"
+
+    merchant1 = JSON.parse(response.body)
+
+    expect(response).to be_successful
+
+    expect(merchant1["id"]).to eq(merchant.id)
+  end
 end
