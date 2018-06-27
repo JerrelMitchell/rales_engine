@@ -143,7 +143,7 @@ describe "Items API" do
     expect(response).to be_successful
     expect(merchants.count).to eq(2)
     expect(merchants.first["name"]).to eq(merchant2.name)
-    expect(merchants.first["total_revenue"]).to eq(invoice_items.unit_price)
+    expect(merchants.first["total_revenue"]).to eq(Money.new(invoice_items.unit_price).to_s)
     expect(merchants.last["name"]).to eq(merchant1.name)
     expect(merchants.last["total_revenue"]).to eq(invoice_items.unit_price)
   end
