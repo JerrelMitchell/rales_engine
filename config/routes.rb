@@ -42,7 +42,9 @@ Rails.application.routes.draw do
       get 'invoices/find',     to: 'invoices/search#show'
       get 'invoices/find_all', to: 'invoices/search#index'
       get 'invoices/random',   to: 'invoices/random#show'
-      resources :invoices, only: [:index, :show]
+      resources :invoices, only: [:index, :show] do
+        get "transactions", to: 'invoices/transactions#show'
+      end
     end
   end
 end

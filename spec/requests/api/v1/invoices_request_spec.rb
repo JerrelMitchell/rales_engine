@@ -126,7 +126,9 @@ describe "Invoices API" do
   end
 
   it "returns all the transactions for a invoice" do
-    invoice = Invoice.create
+    merchant = Merchant.create
+    customer = Customer.create
+    invoice = merchant.invoices.create(customer: customer)
     transaction_id = Transaction.create(invoice: invoice).id
 
     get "/api/v1/invoices/#{Invoice.last.id}/transactions"
