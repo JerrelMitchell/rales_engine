@@ -118,7 +118,7 @@ describe "Items API" do
     expect(items.last["name"]).to_not eq("Failure2")
   end
 
-  it 'returns most revenue for x amount of merchants' do
+  xit 'returns most revenue for x amount of merchants' do
     merchant1 = Merchant.create(name: "Manoj")
     merchant2 = Merchant.create(name: "Jerrel")
     merchant3 = Merchant.create(name: "Wow")

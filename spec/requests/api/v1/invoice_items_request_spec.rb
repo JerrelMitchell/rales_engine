@@ -113,4 +113,30 @@ describe "Invoice Items API" do
     expect(response).to be_successful
     expect(invoice_item["quantity"]).to eq(new_invoice_items.first.quantity)
   end
+  it "returns a invoice related to a invoice items" do
+    create(:invoice_item)
+    invoice_id = InvoiceItem.last.invoice_id
+    invoice_item = InvoiceItem.last.id
+
+    get "/api/v1/invoice_items/#{invoice_item}/invoice"
+
+    invoice = JSON.parse(response.body)
+
+
+    expect(response).to be_successful
+    expect(invoice["id"]).to eq(invoice_id)
+  end
+  it "returns associated item related to a invoice items" do
+    create(:invoice_item)
+    item_id = InvoiceItem.last.item_id
+    invoice_item = InvoiceItem.last.id
+
+    get "/api/v1/invoice_items/#{invoice_item}/item"
+
+    item = JSON.parse(response.body)
+
+
+    expect(response).to be_successful
+    expect(item["id"]).to eq(item_id)
+  end
 end
