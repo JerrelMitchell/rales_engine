@@ -51,7 +51,6 @@ describe "transactions API" do
     expect(transactions.last["credit_card_number"]).to eq(credit_card_number)
   end
 
-
   it "returns a random transaction" do
     create_list(:transaction, 1)
     credit_card_number = Transaction.first.credit_card_number.to_s
