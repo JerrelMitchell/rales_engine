@@ -156,7 +156,7 @@ describe "Invoices API" do
 
     expect(response).to be_successful
     expect(invoice_items.count).to eq(3)
-    expect(invoice_items.first["id"]).to eq(invoice_item)
-    expect(invoice_items.last["id"]).to eq(invoice_item2)
+    expect(invoice_items.first["id"]).to eq(invoice_item.id)
+    expect(invoice_items.last["id"]).to eq(invoice_item2.id)
   end
 end
