@@ -79,7 +79,7 @@ describe "Invoice Items API" do
     expect(invoice_item["quantity"]).to eq(new_invoice_item.quantity)
   end
 
-  xit "can search a single invoice_item by valid timestamps" do
+  it "can search a single invoice_item by valid timestamps" do
     new_invoice_item = create(:invoice_item, created_at: "2012-03-27 14:53:59", updated_at: "2012-03-27 14:53:59")
 
     get "/api/v1/invoice_items/find?created_at=#{new_invoice_item.created_at}"
@@ -87,8 +87,7 @@ describe "Invoice Items API" do
     invoice_item = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(invoice_item["created_at"]).to eq(new_invoice_item.created_at)
-    expect(invoice_item["updated_at"]).to eq(new_invoice_item.updated_at)
+    expect(invoice_item["id"]).to eq(new_invoice_item.id)
   end
 
   it "finds all invoice_items with same item id" do

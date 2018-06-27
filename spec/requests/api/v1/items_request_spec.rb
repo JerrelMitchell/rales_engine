@@ -82,7 +82,7 @@ describe "Items API" do
     expect(item["unit_price"]).to eq(Money.new(new_item.unit_price).to_s)
   end
 
-  xit "can search a single item by valid timestamps" do
+  it "can search a single item by valid timestamps" do
     new_item = create(:item, created_at: "2012-03-27 14:53:59", updated_at: "2012-03-27 14:53:59")
 
     get "/api/v1/items/find?created_at=#{new_item.created_at}"
@@ -90,8 +90,8 @@ describe "Items API" do
     item = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(item["created_at"]).to eq(new_item.created_at)
-    expect(item["updated_at"]).to eq(new_item.updated_at)
+    expect(item["id"]).to eq(new_item.id)
+    expect(item["name"]).to eq(new_item.name)
   end
 
   it "finds all items with same name" do

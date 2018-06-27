@@ -62,7 +62,7 @@ describe "Items API" do
     expect(merchant["id"]).to eq(id)
   end
 
-  xit "can search a single merchant by valid timestamps" do
+  it "can search a single merchant by valid timestamps" do
     created_at = "2012-03-27 14:54:09"
     updated_at = "2012-03-27 14:54:09"
     Merchant.create(name: 'manoj', created_at: created_at, updated_at: updated_at)
@@ -72,7 +72,8 @@ describe "Items API" do
     merchant = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(merchant["created_at"]).to eq(created_at)
+    expect(merchant["name"]).to eq('manoj')
+    expect(merchant["id"]).to eq(Merchant.last.id)
   end
 
   it "returns all merchants with find all method with name params" do

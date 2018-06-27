@@ -84,20 +84,22 @@ describe "Invoices API" do
     expect(invoice["status"]).to eq(status)
   end
 
-  xit "can search a single invoice by valid timestamps" do
+  it "can search a single invoice by valid timestamps" do
 
     created_at = "2012-03-27 14:54:09"
     updated_at = "2012-03-27 14:54:09"
+    merchant = Merchant.create!
+    customer = Customer.create(first_name: 'manoj',last_name: 'panta', created_at: created_at, updated_at: updated_at)
+    invoice = Invoice.create!(created_at: created_at, updated_at: updated_at, customer: customer, merchant: merchant )
 
-    Customer.create(first_name: 'manoj',last_name: 'panta', created_at: created_at, updated_at: updated_at)
 
     get "/api/v1/invoices/find?created_at=#{created_at}"
 
-    invoice = JSON.parse(response.body)
+    invoice1 = JSON.parse(response.body)
 
 
     expect(response).to be_successful
-    expect(invoice["created_at"]).to eq(created_at)
+    expect(invoice1["id"]).to eq(invoice.id)
   end
 
   it "returns all invoices with find all method with name params" do

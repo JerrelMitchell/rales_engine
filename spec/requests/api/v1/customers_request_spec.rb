@@ -71,7 +71,7 @@ describe "Customers API" do
     expect(customer["id"]).to eq(id)
   end
 
-  xit "can search a single customer by valid timestamps" do
+  it "can search a single customer by valid timestamps" do
 
     created_at = "2012-03-27 14:54:09"
     updated_at = "2012-03-27 14:54:09"
@@ -80,11 +80,11 @@ describe "Customers API" do
 
     get "/api/v1/customers/find?created_at=#{created_at}"
 
-    customer = JSON.parse(response.body)
+    customer1 = JSON.parse(response.body)
 
 
     expect(response).to be_successful
-    expect(customer["created_at"]).to eq(created_at)
+    expect(customer1["first_name"]).to eq(customer.first_name)
   end
 
   it "returns all customers with find all method with name params" do
