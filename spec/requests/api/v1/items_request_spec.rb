@@ -224,4 +224,40 @@ describe "Items API" do
     expect(items.last["name"]).to eq(item1.name)
     expect(items[1]["name"]).to eq(item2.name)
   end
+
+  it 'should return best day for a item based on paid invoices count ' do
+    merchant = Merchant.create(name: "King Soopers")
+
+    customer = Customer.create()
+
+    item = merchant.items.create!
+
+    invoice = merchant.invoices.create!(customer: customer, created_at:'2012-03-25 09:54:09 UTC', updated_at: '2012-03-25 09:54:09 UTC' )
+    invoice_item1 = invoice.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice.transactions.create!(result: 'success')
+
+    invoice1 = merchant.invoices.create!(customer: customer, created_at:'2012-03-25 09:54:09 UTC', updated_at: '2012-03-25 09:54:09 UTC' )
+    invoice_item1 = invoice1.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice1.transactions.create!(result: 'success')
+
+    invoice2 = merchant.invoices.create!(customer: customer, created_at:'2012-03-25 09:54:09 UTC', updated_at: '2012-03-25 09:54:09 UTC' )
+    invoice_item2 = invoice2.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice2.transactions.create!(result: 'success')
+
+    invoice3 = merchant.invoices.create!(customer: customer, created_at:'2012-04-25 09:54:09 UTC', updated_at: '2012-04-25 09:54:09 UTC' )
+    invoice_item3 = invoice3.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice3.transactions.create!(result: 'success')
+
+    invoice4 = merchant.invoices.create!(customer: customer, created_at:'2012-04-25 09:54:09 UTC', updated_at: '2012-04-25 09:54:09 UTC' )
+    invoice_item1 = invoice4.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice4.transactions.create!(result: 'success')
+
+    get "/api/v1/items/#{item.id}/best_day"
+
+    best_day = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(best_day.count).to eq(1)
+    expect(best_day['updated_at']).to eq(invoice.created_at)
+  end
 end
