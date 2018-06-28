@@ -204,7 +204,9 @@ describe "Items API" do
     merchants = JSON.parse(response.body)
 
     expect(response).to be_successful
+    expect(merchants.count).to eq(2)
     expect(merchants.first['name']).to eq(merchant.name)
+    expect(merchants.last['name']).to eq(merchant1.name)
   end
 
   xit 'returns most revenue for x amount of merchants' do
