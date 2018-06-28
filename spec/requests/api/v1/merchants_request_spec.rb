@@ -120,7 +120,6 @@ describe "Items API" do
   end
 
   it "returns revenue for a merchant" do
-
     merchant = Merchant.create(name: "King Soopers")
     customer = Customer.create()
 
@@ -157,8 +156,7 @@ describe "Items API" do
     expect(revenue["revenue"]).to eq("112.00")
   end
 
-  it "returns merchants that sold most items" do
-
+  it "returns quantity[NUMBER] of merchants that sold most items" do
     merchant = Merchant.create(name: "King Soopers")
     merchant1 = Merchant.create(name: 'walmart')
     merchant2 = Merchant.create(name: 'Costco')
@@ -210,9 +208,6 @@ describe "Items API" do
   end
 
   it "returns favorite customer for a merchant" do
-    "GET /api/v1/merchants/:id/favorite_customer returns the customer who has conducted the most total number of successful transactions."
-
-
     merchant = Merchant.create!(name: "King Soopers")
 
     customer = Customer.create!(first_name: 'Manoj', last_name: 'Panta')
@@ -264,23 +259,44 @@ describe "Items API" do
     expect(favorite_customer['last_name']).to eq(customer.last_name)
   end
 
-  xit 'returns most revenue for x amount of merchants' do
-    merchant1 = Merchant.create(name: "Manoj")
-    merchant2 = Merchant.create(name: "Jerrel")
-    merchant3 = Merchant.create(name: "Wow")
-    customer1 = Customer.create(first_name: "Dude", last_name: "Bruh")
-    item1 = merchant1.items.create(name: "M&Ms", unit_price: 300)
-    item2 = merchant2.items.create(name: "Failure", unit_price: 1250)
-    item3 = merchant2.items.create(name: "Failure2", unit_price: 5000)
-    item4 = merchant1.items.create(name: "Twix", unit_price: 100)
-    invoice1 = item1.invoices.create(customer: customer1, merchant: merchant1, status: 'successful')
-    invoice2 = item2.invoices.create(customer: customer1, merchant: merchant2, status: 'successful')
-    invoice3 = item3.invoices.create(customer: customer1, merchant: merchant1, status: 'cancelled')
-    invoice4 = item4.invoices.create(customer: customer1, merchant: merchant2, status: 'cancelled')
-    invoice_item1 = item1.invoice_items.create(invoice: invoice1, quantity: 1)
-    invoice_item2 = item2.invoice_items.create(invoice: invoice2, quantity: 1)
-    invoice_item3 = item3.invoice_items.create(invoice: invoice3, quantity: 1)
-    invoice_item4 = item4.invoice_items.create(invoice: invoice4, quantity: 1)
+  it 'returns most revenue for quantity[NUMBER] of merchants' do
+    merchant = Merchant.create(name: "King Soopers")
+    merchant1 = Merchant.create(name: 'walmart')
+    merchant2 = Merchant.create(name: 'Costco')
+
+    customer = Customer.create()
+
+    item = merchant.items.create!
+    item1 = merchant.items.create!
+    item2 = merchant.items.create!
+
+    merchant1.items.create!
+    item4 = merchant1.items.create!
+    item5 = merchant1.items.create!
+
+    item6 = merchant2.items.create!
+    item7 = merchant2.items.create!
+    item8 = merchant2.items.create!
+
+    item3 = merchant1.items.create!
+
+    invoice = merchant.invoices.create!(customer: customer)
+    invoice.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice.invoice_items.create!(item: item1, quantity: 4, unit_price: 1400)
+    invoice.invoice_items.create!(item: item2, quantity: 4, unit_price: 1400)
+    invoice.transactions.create!(result: 'success')
+
+    invoice1 = merchant1.invoices.create!(customer: customer)
+    invoice1.invoice_items.create!(item: item3, quantity: 2, unit_price: 1400)
+    invoice1.invoice_items.create!(item: item4, quantity: 2, unit_price: 1400)
+    invoice1.invoice_items.create!(item: item5, quantity: 2, unit_price: 1400)
+    invoice1.transactions.create!(result: 'success')
+
+    invoice2 = merchant2.invoices.create!(customer: customer)
+    invoice2.invoice_items.create!(item: item6, quantity: 1, unit_price: 1400)
+    invoice2.invoice_items.create!(item: item7, quantity: 1, unit_price: 1400)
+    invoice2.invoice_items.create!(item: item8, quantity: 1, unit_price: 1400)
+    invoice2.transactions.create!(result: 'success')
 
     get "/api/v1/merchants/most_revenue?quantity=2"
 
@@ -288,9 +304,9 @@ describe "Items API" do
 
     expect(response).to be_successful
     expect(merchants.count).to eq(2)
-    expect(merchants.first["name"]).to eq(merchant2.name)
-    expect(merchants.first["total_revenue"]).to eq(Money.new(invoice_items.unit_price).to_s)
+    expect(merchants.first["id"]).to eq(merchant.id)
+    expect(merchants.first["name"]).to eq(merchant.name)
+    expect(merchants.last["id"]).to eq(merchant1.id)
     expect(merchants.last["name"]).to eq(merchant1.name)
-    expect(merchants.last["total_revenue"]).to eq(invoice_items.unit_price)
-  end
+  endd
 end
