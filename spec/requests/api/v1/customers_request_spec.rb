@@ -112,4 +112,43 @@ describe "Customers API" do
     expect(response).to be_successful
     expect(customer["first_name"]).to eq(name)
   end
+
+  it "returns favorite merchant of a customer" do
+    merchant = Merchant.create(name: "King Soopers")
+    merchant1 = Merchant.create(name: 'walmart')
+    merchant2 = Merchant.create(name: 'Costco')
+
+    customer = Customer.create()
+
+
+    invoice = merchant.invoices.create!(customer: customer)
+    invoice1 = merchant.invoices.create!(customer: customer)
+    invoice2 = merchant.invoices.create!(customer: customer)
+    invoice3 = merchant.invoices.create!(customer: customer)
+
+    invoice.transactions.create!(result: 'success')
+    invoice1.transactions.create!(result: 'success')
+    invoice2.transactions.create!(result: 'success')
+    invoice3.transactions.create!(result: 'success')
+
+    invoice4 = merchant1.invoices.create!(customer: customer)
+    invoice5 = merchant1.invoices.create!(customer: customer)
+
+    invoice4.transactions.create!(result: 'success')
+    invoice5.transactions.create!(result: 'success')
+
+    invoice6 = merchant2.invoices.create!(customer: customer)
+    invoice7 = merchant2.invoices.create!(customer: customer)
+
+    invoice6.transactions.create!(result: 'success')
+    invoice7.transactions.create!(result: 'success')
+
+    get "/api/v1/customers/#{customer.id}/favorite_merchant"
+
+    favorite_merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(favorite_merchant['name']).to eq('King Soopers')
+    expect(favorite_merchant['id']).to eq(merchant.id)
+  end
 end
