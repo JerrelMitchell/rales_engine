@@ -106,6 +106,54 @@ describe "Items API" do
     expect(items.first["name"]).to eq(new_items.first.name)
   end
 
+  it "finds all items with same name" do
+    new_items = create_list(:item, 3)
+
+    get "/api/v1/items/find_all?name=Twix"
+
+    items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(items.count).to eq(3)
+    expect(items.first["name"]).to eq(new_items.first.name)
+  end
+
+  it "finds all items with same description" do
+    new_items = create_list(:item, 3)
+
+    get "/api/v1/items/find_all?description=#{new_items.first.description}"
+
+    items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(items.count).to eq(3)
+    expect(items.first["description"]).to eq(new_items.first.description)
+  end
+
+  it "finds all items with same unit price" do
+    new_items = create_list(:item, 3)
+
+    get "/api/v1/items/find_all?unit_price=#{new_items.first.unit_price}"
+
+    items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(items.count).to eq(3)
+    expect(items.first["unit_price"]).to eq(Money.new(new_items.first.unit_price).to_s)
+  end
+
+  it "finds all items with same merchant id" do
+    new_items = create_list(:item, 3)
+
+    get "/api/v1/items/find_all?merchant_id=#{new_items.first.merchant_id}"
+
+    items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(items.count).to eq(1)
+    expect(items.first["merchant_id"]).to eq(new_items.first.merchant_id)
+  end
+
   it "returns a random item" do
     new_items = create_list(:item, 3)
 
