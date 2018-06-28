@@ -22,6 +22,5 @@ class Item < ApplicationRecord
     .limit(1)
     .first
     .created_at
-
   end
 end
