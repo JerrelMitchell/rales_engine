@@ -342,6 +342,6 @@ describe "Items API" do
     revenue = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(revenue).to eq("168.00")
+    expect(revenue["revenue"]).to eq("168.00")
   end
 end
