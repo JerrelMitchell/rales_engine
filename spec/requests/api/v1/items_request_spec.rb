@@ -232,15 +232,15 @@ describe "Items API" do
 
     item = merchant.items.create!
 
-    invoice = merchant.invoices.create!(customer: customer, created_at:'2012-03-25 09:54:09 UTC', updated_at: '2012-03-25 09:54:09 UTC' )
+    invoice = merchant.invoices.create!(customer: customer, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
     invoice_item1 = invoice.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
     invoice.transactions.create!(result: 'success')
 
-    invoice1 = merchant.invoices.create!(customer: customer, created_at:'2012-03-25 09:54:09 UTC', updated_at: '2012-03-25 09:54:09 UTC' )
+    invoice1 = merchant.invoices.create!(customer: customer, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
     invoice_item1 = invoice1.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
     invoice1.transactions.create!(result: 'success')
 
-    invoice2 = merchant.invoices.create!(customer: customer, created_at:'2012-03-25 09:54:09 UTC', updated_at: '2012-03-25 09:54:09 UTC' )
+    invoice2 = merchant.invoices.create!(customer: customer, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
     invoice_item2 = invoice2.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
     invoice2.transactions.create!(result: 'success')
 
@@ -258,6 +258,6 @@ describe "Items API" do
 
     expect(response).to be_successful
     expect(best_day.count).to eq(1)
-    expect(best_day['updated_at']).to eq(invoice.created_at)
+    expect(best_day['best_day']).to eq("2012-03-22T03:55:09.000Z")
   end
 end
