@@ -102,7 +102,7 @@ describe "Invoices API" do
     expect(invoice1["id"]).to eq(invoice.id)
   end
 
-  it "returns all invoices with find all method with name params" do
+  it "returns all invoices with status params" do
     new_invoices = create_list(:invoice, 3)
     status = new_invoices.first.status
 
@@ -113,6 +113,32 @@ describe "Invoices API" do
     expect(response).to be_successful
     expect(invoices.count).to eq(3)
     expect(invoices.first["status"]).to eq(status)
+  end
+
+  it "returns all invoices with customer_id params" do
+    new_invoices = create_list(:invoice, 3)
+    customer_id = new_invoices.first.customer_id
+
+    get "/api/v1/invoices/find_all?customer_id=#{customer_id}"
+
+    invoices = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(invoices.count).to eq(1)
+    expect(invoices.first["customer_id"]).to eq(customer_id)
+  end
+
+  it "returns all invoices with merchant_id params" do
+    new_invoices = create_list(:invoice, 3)
+    merchant_id = new_invoices.first.merchant_id
+
+    get "/api/v1/invoices/find_all?merchant_id=#{merchant_id}"
+
+    invoices = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(invoices.count).to eq(1)
+    expect(invoices.first["merchant_id"]).to eq(merchant_id)
   end
 
   it "returns a random invoice" do
@@ -127,7 +153,7 @@ describe "Invoices API" do
     expect(invoice["status"]).to eq(status)
   end
 
-  it "returns all the transactions for a invoice" do
+  it "returns all the transactions for an invoice" do
     merchant = Merchant.create
     customer = Customer.create
     invoice = merchant.invoices.create(customer: customer)
@@ -141,7 +167,7 @@ describe "Invoices API" do
     expect(transactions.first["id"]).to eq(transaction_id)
   end
 
-  it "returns all the invoice items for a invoice" do
+  it "returns all the invoice items for an invoice" do
     merchant = Merchant.create
     customer = Customer.create
     item = Item.create
@@ -162,7 +188,7 @@ describe "Invoices API" do
     expect(invoice_items.last["id"]).to eq(invoice_item2.id)
   end
 
-  it "returns all the items for a invoice" do
+  it "returns all the items for an invoice" do
     merchant = Merchant.create
     customer = Customer.create
     item1 = merchant.items.create(name: "Option1", description: "This is an option", unit_price: 100)
@@ -183,7 +209,7 @@ describe "Invoices API" do
     expect(items.last["id"]).to eq(item3.id)
   end
 
-  it "returns associated customer for  an invoice" do
+  it "returns associated customer for an invoice" do
     merchant = Merchant.create
     customer = Customer.create
 
@@ -198,7 +224,7 @@ describe "Invoices API" do
     expect(customer1["id"]).to eq(customer.id)
   end
 
-  it "returns associated merchant for  an invoice" do
+  it "returns associated merchant for an invoice" do
     merchant = Merchant.create
     customer = Customer.create
 

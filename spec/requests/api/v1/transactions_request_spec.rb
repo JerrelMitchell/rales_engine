@@ -35,6 +35,35 @@ describe "transactions API" do
     expect(transaction["credit_card_number"]).to eq(credit_card_number.to_s)
   end
 
+  it "returns all transactions with find all method with invoice_id params" do
+    create_list(:transaction, 3)
+
+    invoice_id = Transaction.first.invoice_id
+
+    get "/api/v1/transactions/find_all?invoice_id=#{invoice_id}"
+
+    transactions = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(transactions.count).to eq(1)
+    expect(transactions.first["invoice_id"]).to eq(invoice_id)
+    expect(transactions.last["invoice_id"]).to eq(invoice_id)
+  end
+
+  it "returns all transactions with find all method with result params" do
+    create_list(:transaction, 3)
+
+    result = Transaction.first.result
+
+    get "/api/v1/transactions/find_all?result=#{result}"
+
+    transactions = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(transactions.count).to eq(3)
+    expect(transactions.first["result"]).to eq(result)
+    expect(transactions.last["result"]).to eq(result)
+  end
 
   it "returns all transactions with find all method with credit_card_number params" do
     create_list(:transaction, 3)
