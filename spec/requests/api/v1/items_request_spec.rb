@@ -224,4 +224,37 @@ describe "Items API" do
     expect(items.last["name"]).to eq(item1.name)
     expect(items[1]["name"]).to eq(item2.name)
   end
+
+    it 'returns NUMBER of items ranked by sold count' do
+      create(:merchant)
+      create(:customer)
+      invoice1 = create(:invoice)
+      invoice2 = create(:invoice)
+      invoice3 = create(:invoice)
+      item1 = create(:item, name: "M&Ms", unit_price: 200)
+      item2 = create(:item, name: "Jalapeno Chips", unit_price: 300)
+      item3 = create(:item, name: "Twix", unit_price: 350)
+      create(:transaction, invoice: invoice1)
+      create(:transaction, invoice: invoice2)
+      create(:transaction, invoice: invoice3)
+      create(:invoice_item, item: item1, quantity: 10, invoice: invoice1)
+      create(:invoice_item, item: item1, quantity: 9, invoice: invoice1)
+      create(:invoice_item, item: item1, quantity: 8, invoice: invoice1)
+      create(:invoice_item, item: item2, quantity: 40, invoice: invoice2)
+      create(:invoice_item, item: item2, quantity: 30, invoice: invoice2)
+      create(:invoice_item, item: item2, quantity: 20, invoice: invoice2)
+      create(:invoice_item, item: item2, quantity: 11, invoice: invoice2)
+      create(:invoice_item, item: item3, quantity: 1, invoice: invoice3)
+      create(:invoice_item, item: item3, quantity: 1, invoice: invoice3)
+      create(:invoice_item, item: item3, quantity: 1, invoice: invoice3)
+
+      get '/api/v1/items/most_items?quantity=2'
+
+      items = JSON.parse(response.body)
+
+      expect(response).to be_successful
+      expect(items.count).to eq(2)
+      expect(items.first["name"]).to eq(item2.name)
+      expect(items.last["name"]).to eq(item1.name)
+    end
 end
