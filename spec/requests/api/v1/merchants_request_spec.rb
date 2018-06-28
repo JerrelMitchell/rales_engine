@@ -261,7 +261,7 @@ describe "Items API" do
 
     expect(response).to be_successful
     expect(favorite_customer['first_name']).to eq(customer.first_name)
-    expect(favorite_customer['last_name']).to eq(customer1.last_name)
+    expect(favorite_customer['last_name']).to eq(customer.last_name)
   end
 
   xit 'returns most revenue for x amount of merchants' do
