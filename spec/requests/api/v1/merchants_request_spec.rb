@@ -308,5 +308,5 @@ describe "Items API" do
     expect(merchants.first["name"]).to eq(merchant.name)
     expect(merchants.last["id"]).to eq(merchant1.id)
     expect(merchants.last["name"]).to eq(merchant1.name)
-  endd
+  end
 end
