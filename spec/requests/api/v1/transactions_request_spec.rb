@@ -21,7 +21,7 @@ describe "transactions API" do
 
     expect(response).to be_successful
     expect(transaction["id"]).to eq(id)
-    expect(transaction["result"]).to eq('successful')
+    expect(transaction["result"]).to eq('success')
   end
 
   it "returns a transaction with find method with credit_card_number params" do

@@ -87,7 +87,7 @@ describe "Customers API" do
     expect(customer1["first_name"]).to eq(customer.first_name)
   end
 
-  it "returns all customers with find all method with name params" do
+  it "returns all customers with find all method with first name params" do
     create_list(:customer, 3)
     name = Customer.last.first_name
 
@@ -98,6 +98,19 @@ describe "Customers API" do
     expect(response).to be_successful
     expect(customers.count).to eq(3)
     expect(customers.first["first_name"]).to eq(name)
+  end
+
+  it "returns all customers with find all method with last name params" do
+    create_list(:customer, 3)
+    name = Customer.last.last_name
+
+    get "/api/v1/customers/find_all?last_name=#{name}"
+
+    customers = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(customers.count).to eq(3)
+    expect(customers.first["last_name"]).to eq(name)
   end
 
   it "returns a random customer" do

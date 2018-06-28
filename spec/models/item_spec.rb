@@ -1,5 +1,9 @@
 # require 'rails_helper'
 #
 # RSpec.describe Item, type: :model do
-#   pending "add some examples to (or delete) #{__FILE__}"
+#   describe 'Business Intelligence Endpoints' do
+#     describe '/api/v1/items/most_revenue?quantity=x' do
+#
+#     end
+#   end
 # end
