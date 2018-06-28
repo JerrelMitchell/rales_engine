@@ -1,7 +1,6 @@
  class Api::V1::Merchants::RevenueController < ApplicationController
    def show
      if params[:date]
-
        revenue =  Merchant.find(params[:merchant_id]).revenue_for_a_date(params[:date].to_date)
      else
        revenue =  Merchant.find(params[:merchant_id]).revenue
