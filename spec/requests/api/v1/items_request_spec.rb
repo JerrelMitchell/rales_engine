@@ -225,36 +225,72 @@ describe "Items API" do
     expect(items[1]["name"]).to eq(item2.name)
   end
 
-    it 'returns NUMBER of items ranked by sold count' do
-      create(:merchant)
-      create(:customer)
-      invoice1 = create(:invoice)
-      invoice2 = create(:invoice)
-      invoice3 = create(:invoice)
-      item1 = create(:item, name: "M&Ms", unit_price: 200)
-      item2 = create(:item, name: "Jalapeno Chips", unit_price: 300)
-      item3 = create(:item, name: "Twix", unit_price: 350)
-      create(:transaction, invoice: invoice1)
-      create(:transaction, invoice: invoice2)
-      create(:transaction, invoice: invoice3)
-      create(:invoice_item, item: item1, quantity: 10, invoice: invoice1)
-      create(:invoice_item, item: item1, quantity: 9, invoice: invoice1)
-      create(:invoice_item, item: item1, quantity: 8, invoice: invoice1)
-      create(:invoice_item, item: item2, quantity: 40, invoice: invoice2)
-      create(:invoice_item, item: item2, quantity: 30, invoice: invoice2)
-      create(:invoice_item, item: item2, quantity: 20, invoice: invoice2)
-      create(:invoice_item, item: item2, quantity: 11, invoice: invoice2)
-      create(:invoice_item, item: item3, quantity: 1, invoice: invoice3)
-      create(:invoice_item, item: item3, quantity: 1, invoice: invoice3)
-      create(:invoice_item, item: item3, quantity: 1, invoice: invoice3)
+  it 'should return best day for a item based on paid invoices count ' do
+    merchant = Merchant.create(name: "King Soopers")
 
-      get '/api/v1/items/most_items?quantity=2'
+    customer = Customer.create()
 
-      items = JSON.parse(response.body)
+    item = merchant.items.create!
 
-      expect(response).to be_successful
-      expect(items.count).to eq(2)
-      expect(items.first["name"]).to eq(item2.name)
-      expect(items.last["name"]).to eq(item1.name)
-    end
+    invoice = merchant.invoices.create!(customer: customer, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
+    invoice_item1 = invoice.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice.transactions.create!(result: 'success')
+
+    invoice1 = merchant.invoices.create!(customer: customer, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
+    invoice_item1 = invoice1.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice1.transactions.create!(result: 'success')
+
+    invoice2 = merchant.invoices.create!(customer: customer, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
+    invoice_item2 = invoice2.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice2.transactions.create!(result: 'success')
+
+    invoice3 = merchant.invoices.create!(customer: customer, created_at:'2012-04-25 09:54:09 UTC', updated_at: '2012-04-25 09:54:09 UTC' )
+    invoice_item3 = invoice3.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice3.transactions.create!(result: 'success')
+
+    invoice4 = merchant.invoices.create!(customer: customer, created_at:'2012-04-25 09:54:09 UTC', updated_at: '2012-04-25 09:54:09 UTC' )
+    invoice_item1 = invoice4.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice4.transactions.create!(result: 'success')
+
+    get "/api/v1/items/#{item.id}/best_day"
+
+    best_day = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(best_day.count).to eq(1)
+    expect(best_day['best_day']).to eq("2012-03-22T03:55:09.000Z")
+  end
+
+  it 'returns NUMBER of items ranked by sold count' do
+    create(:merchant)
+    create(:customer)
+    invoice1 = create(:invoice)
+    invoice2 = create(:invoice)
+    invoice3 = create(:invoice)
+    item1 = create(:item, name: "M&Ms", unit_price: 200)
+    item2 = create(:item, name: "Jalapeno Chips", unit_price: 300)
+    item3 = create(:item, name: "Twix", unit_price: 350)
+    create(:transaction, invoice: invoice1)
+    create(:transaction, invoice: invoice2)
+    create(:transaction, invoice: invoice3)
+    create(:invoice_item, item: item1, quantity: 10, invoice: invoice1)
+    create(:invoice_item, item: item1, quantity: 9, invoice: invoice1)
+    create(:invoice_item, item: item1, quantity: 8, invoice: invoice1)
+    create(:invoice_item, item: item2, quantity: 40, invoice: invoice2)
+    create(:invoice_item, item: item2, quantity: 30, invoice: invoice2)
+    create(:invoice_item, item: item2, quantity: 20, invoice: invoice2)
+    create(:invoice_item, item: item2, quantity: 11, invoice: invoice2)
+    create(:invoice_item, item: item3, quantity: 1, invoice: invoice3)
+    create(:invoice_item, item: item3, quantity: 1, invoice: invoice3)
+    create(:invoice_item, item: item3, quantity: 1, invoice: invoice3)
+
+    get '/api/v1/items/most_items?quantity=2'
+
+    items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(items.count).to eq(2)
+    expect(items.first["name"]).to eq(item2.name)
+    expect(items.last["name"]).to eq(item1.name)
+  end
 end
