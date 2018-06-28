@@ -309,4 +309,39 @@ describe "Items API" do
     expect(merchants.last["id"]).to eq(merchant1.id)
     expect(merchants.last["name"]).to eq(merchant1.name)
   end
+
+  it 'returns revenue for specified date' do
+    merchant = Merchant.create(name: "King Soopers")
+
+    customer = Customer.create()
+
+    item = merchant.items.create!
+
+    invoice = merchant.invoices.create!(customer: customer, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
+    invoice_item1 = invoice.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice.transactions.create!(result: 'success')
+
+    invoice1 = merchant.invoices.create!(customer: customer, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
+    invoice_item1 = invoice1.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice1.transactions.create!(result: 'success')
+
+    invoice2 = merchant.invoices.create!(customer: customer, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
+    invoice_item2 = invoice2.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice2.transactions.create!(result: 'success')
+
+    invoice3 = merchant.invoices.create!(customer: customer, created_at:'2012-04-25 09:54:09 UTC', updated_at: '2012-04-25 09:54:09 UTC' )
+    invoice_item3 = invoice3.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice3.transactions.create!(result: 'success')
+
+    invoice4 = merchant.invoices.create!(customer: customer, created_at:'2012-04-25 09:54:09 UTC', updated_at: '2012-04-25 09:54:09 UTC' )
+    invoice_item1 = invoice4.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice4.transactions.create!(result: 'success')
+
+    get "/api/v1/merchants/revenue?date=#{invoice.created_at}"
+
+    revenue = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(revenue).to eq("168.00")
+  end
 end
