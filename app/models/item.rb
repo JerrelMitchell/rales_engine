@@ -4,8 +4,9 @@ class Item < ApplicationRecord
   has_many :transactions, through: :invoices
   has_many :invoices, through: :invoice_items
 
+
   def self.best_sellers(quantity)
-    select("items.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue")
+     select("items.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue")
       .joins(invoices: [:invoice_items, :transactions])
       .where(transactions: { result: "success" })
       .group(:id)
@@ -23,9 +24,9 @@ class Item < ApplicationRecord
     .first
     .created_at
   end
-  
+
   def self.most_items(quantity)
-    joins(:invoices, invoices: [:transactions])
+      joins(:invoices, invoices: [:transactions])
       .merge(Transaction.unscoped.successful)
       .group(:id)
       .order('SUM(invoice_items.quantity) DESC')
