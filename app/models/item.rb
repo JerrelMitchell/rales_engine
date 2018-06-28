@@ -13,6 +13,17 @@ class Item < ApplicationRecord
       .limit(quantity)
   end
 
+  def best_day
+    invoices.select('invoices.*, count(invoices)as invoice_count')
+    .joins(:invoice_items, :transactions)
+    .where(transactions: {result: 'success'})
+    .order('invoice_count DESC')
+    .group(:id, :created_at)
+    .limit(1)
+    .first
+    .created_at
+  end
+  
   def self.most_items(quantity)
     joins(:invoices, invoices: [:transactions])
       .merge(Transaction.unscoped.successful)

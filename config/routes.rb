@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       end
       resources :merchants do
         get 'revenue', to: 'merchants/revenue#show'
+        get 'favorite_customer', to: 'merchants/favorite_customer#show'
         resources :items,    only: [:index]
         resources :invoices, only: [:index]
       end
@@ -22,6 +23,7 @@ Rails.application.routes.draw do
         get 'most_items',   to: 'most_items#index'
       end
       resources :items, only: [:index, :show] do
+        get 'best_day', to: 'items/best_day#show'
         get 'merchant',      to: 'items/merchants#show'
         get 'invoice_items', to: 'items/invoice_items#index'
       end

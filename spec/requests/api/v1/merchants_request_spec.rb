@@ -209,6 +209,61 @@ describe "Items API" do
     expect(merchants.last['name']).to eq(merchant1.name)
   end
 
+  it "returns favorite customer for a merchant" do
+    "GET /api/v1/merchants/:id/favorite_customer returns the customer who has conducted the most total number of successful transactions."
+
+
+    merchant = Merchant.create!(name: "King Soopers")
+
+    customer = Customer.create!(first_name: 'Manoj', last_name: 'Panta')
+    customer1 = Customer.create!(first_name: 'Jerrel', last_name: 'Mitchell')
+
+
+    item = merchant.items.create!
+    item1 = merchant.items.create!
+    item2 = merchant.items.create!
+
+    invoice = merchant.invoices.create!(customer: customer)
+    invoice_item1 = invoice.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice_item2 = invoice.invoice_items.create!(item: item1, quantity: 4, unit_price: 1400)
+    invoice_item3 = invoice.invoice_items.create!(item: item2, quantity: 4, unit_price: 1400)
+    invoice.transactions.create!(result: 'success')
+
+    invoice1 = merchant.invoices.create!(customer: customer)
+    invoice_item4 = invoice1.invoice_items.create!(item: item, quantity: 2, unit_price: 1400)
+    invoice_item5 = invoice1.invoice_items.create!(item: item1, quantity: 2, unit_price: 1400)
+    invoice_item6 = invoice1.invoice_items.create!(item: item2, quantity: 2, unit_price: 1400)
+    invoice1.transactions.create!(result: 'success')
+
+    invoice2 = merchant.invoices.create!(customer: customer)
+    invoice_item7 = invoice2.invoice_items.create!(item: item, quantity: 1, unit_price: 1400)
+    invoice_item8 = invoice2.invoice_items.create!(item: item1, quantity: 1, unit_price: 1400)
+    invoice_item9 = invoice2.invoice_items.create!(item: item2, quantity: 1, unit_price: 1400)
+    invoice2.transactions.create!(result: 'success')
+
+    invoice3 = merchant.invoices.create!(customer: customer1)
+    invoice_item10 = invoice2.invoice_items.create!(item: item, quantity: 1, unit_price: 1400)
+    invoice_item11 = invoice2.invoice_items.create!(item: item1, quantity: 1, unit_price: 1400)
+    invoice_item12 = invoice2.invoice_items.create!(item: item2, quantity: 1, unit_price: 1400)
+    invoice3.transactions.create!(result: 'success')
+
+    invoice4 = merchant.invoices.create!(customer: customer1)
+    invoice_item10 = invoice2.invoice_items.create!(item: item, quantity: 1, unit_price: 1400)
+    invoice_item11 = invoice2.invoice_items.create!(item: item1, quantity: 1, unit_price: 1400)
+    invoice_item12 = invoice2.invoice_items.create!(item: item2, quantity: 1, unit_price: 1400)
+    invoice4.transactions.create!(result: 'success')
+
+
+
+    get "/api/v1/merchants/#{merchant.id}/favorite_customer"
+
+    favorite_customer = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(favorite_customer['first_name']).to eq(customer.first_name)
+    expect(favorite_customer['last_name']).to eq(customer.last_name)
+  end
+
   xit 'returns most revenue for x amount of merchants' do
     merchant1 = Merchant.create(name: "Manoj")
     merchant2 = Merchant.create(name: "Jerrel")
