@@ -149,5 +149,6 @@ describe "Customers API" do
 
     expect(response).to be_successful
     expect(favorite_merchant['name']).to eq('King Soopers')
+    expect(favorite_merchant['id']).to eq(merchant.id)
   end
 end
