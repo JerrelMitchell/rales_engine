@@ -58,4 +58,18 @@ class Merchant < ApplicationRecord
       .where(transactions: { result: 'success' }, created_at: date.beginning_of_day..date.end_of_day)[0]
       .revenue
   end
+
+  def customers_with_pending_invoices
+    Customer.find_by_sql ["SELECT customers.* FROM merchants
+                  JOIN invoices ON merchants.id = invoices.merchant_id
+                  JOIN customers ON customers.id = invoices.customer_id
+                  JOIN transactions ON invoices.id = transactions.invoice_id
+                  WHERE merchants.id = #{id}
+                  EXCEPT
+                  SELECT customers.* FROM merchants
+                  JOIN invoices ON merchants.id = invoices.merchant_id
+                  JOIN customers ON customers.id = invoices.customer_id
+                  JOIN transactions ON invoices.id = transactions.invoice_id
+                  WHERE merchants.id = #{id} and transactions.result = 'success';"]
+  end
 end

@@ -344,4 +344,44 @@ describe "Items API" do
     expect(response).to be_successful
     expect(revenue["total_revenue"]).to eq("168.00")
   end
+
+  it 'returns customers with pending invoices' do
+    merchant = Merchant.create(name: "King Soopers")
+    merchant2 = Merchant.create(name: "Sonic")
+
+    customer1 = Customer.create(first_name: "Manoj", last_name: "Panta")
+    customer2 = Customer.create(first_name: "Jerrel", last_name: "Mitchell")
+    customer3 = Customer.create(first_name: "Something", last_name: "Creative")
+    customer4 = Customer.create(first_name: "Notso", last_name: "Creative")
+    customer5 = Customer.create(first_name: "Really", last_name: "Creative")
+
+    item = merchant.items.create!
+
+    invoice = merchant.invoices.create!(customer: customer1, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
+    invoice.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice.transactions.create!(result: 'failed')
+
+    invoice1 = merchant.invoices.create!(customer: customer2, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
+    invoice1.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice1.transactions.create!(result: 'success')
+
+    invoice2 = merchant.invoices.create!(customer: customer3, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
+    invoice2.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice2.transactions.create!(result: 'success')
+
+    invoice3 = merchant2.invoices.create!(customer: customer4, created_at:'2012-04-25 09:54:09 UTC', updated_at: '2012-04-25 09:54:09 UTC' )
+    invoice3.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice3.transactions.create!(result: 'success')
+
+    invoice4 = merchant2.invoices.create!(customer: customer5, created_at:'2012-04-25 09:54:09 UTC', updated_at: '2012-04-25 09:54:09 UTC' )
+    invoice4.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
+    invoice4.transactions.create!(result: 'success')
+
+    get "/api/v1/merchants/#{merchant.id}/customers_with_pending_invoices"
+
+    customers = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(customers.first["first_name"]).to eq("Manoj")
+  end
 end

@@ -29,7 +29,7 @@ class Item < ApplicationRecord
       joins(:invoices, invoices: [:transactions])
       .merge(Transaction.unscoped.successful)
       .group(:id)
-      .order('SUM(invoice_items.quantity) DESC')
+      .order(Arel.sql('SUM(invoice_items.quantity) DESC'))
       .limit(quantity)
   end
 end
