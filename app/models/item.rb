@@ -6,27 +6,28 @@ class Item < ApplicationRecord
 
 
   def self.best_sellers(quantity)
-     select("items.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue")
+    select('items.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue')
       .joins(invoices: [:invoice_items, :transactions])
-      .where(transactions: { result: "success" })
+      .where(transactions: { result: 'success' })
       .group(:id)
-      .order("revenue DESC")
+      .order('revenue DESC')
       .limit(quantity)
   end
 
   def best_day
-    invoices.select('invoices.*, count(invoices)as invoice_count')
-    .joins(:invoice_items, :transactions)
-    .where(transactions: {result: 'success'})
-    .order('invoice_count DESC')
-    .group(:id, :created_at)
-    .limit(1)
-    .first
-    .created_at
+    invoices
+      .select('invoices.*, count(invoices)as invoice_count')
+      .joins(:invoice_items, :transactions)
+      .where(transactions: { result: 'success' })
+      .order('invoice_count DESC')
+      .group(:id, :created_at)
+      .limit(1)
+      .first
+      .created_at
   end
 
   def self.most_items(quantity)
-      joins(:invoices, invoices: [:transactions])
+    joins(:invoices, invoices: [:transactions])
       .merge(Transaction.unscoped.successful)
       .group(:id)
       .order(Arel.sql('SUM(invoice_items.quantity) DESC'))
