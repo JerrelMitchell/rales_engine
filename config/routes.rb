@@ -13,7 +13,7 @@ Rails.application.routes.draw do
       resources :merchants do
         get 'revenue', to: 'merchants/revenue#show'
         get 'favorite_customer', to: 'merchants/favorite_customer#show'
-        get 'customers_with_pending_invoices', to: 'merchants/pending_customer_invoices#index'
+        get 'customers_with_pending_invoices', to: 'merchants/customers_with_pending_invoices#index'
         resources :items,    only: [:index]
         resources :invoices, only: [:index]
       end

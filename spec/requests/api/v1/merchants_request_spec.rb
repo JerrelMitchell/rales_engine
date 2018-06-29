@@ -363,15 +363,15 @@ describe "Items API" do
 
     invoice1 = merchant.invoices.create!(customer: customer2, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
     invoice1.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
-    invoice1.transactions.create!(result: 'failed')
+    invoice1.transactions.create!(result: 'success')
 
     invoice2 = merchant.invoices.create!(customer: customer3, created_at:'2012-03-22 03:55:09 UTC', updated_at: '2012-03-22 03:55:09 UTC' )
     invoice2.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
-    invoice2.transactions.create!(result: 'failed')
+    invoice2.transactions.create!(result: 'success')
 
     invoice3 = merchant2.invoices.create!(customer: customer4, created_at:'2012-04-25 09:54:09 UTC', updated_at: '2012-04-25 09:54:09 UTC' )
     invoice3.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
-    invoice3.transactions.create!(result: 'failed')
+    invoice3.transactions.create!(result: 'success')
 
     invoice4 = merchant2.invoices.create!(customer: customer5, created_at:'2012-04-25 09:54:09 UTC', updated_at: '2012-04-25 09:54:09 UTC' )
     invoice4.invoice_items.create!(item: item, quantity: 4, unit_price: 1400)
@@ -379,9 +379,9 @@ describe "Items API" do
 
     get "/api/v1/merchants/#{merchant.id}/customers_with_pending_invoices"
 
-    revenue = JSON.parse(response.body)
+    customers = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(revenue["total_revenue"]).to eq("168.00")
+    expect(customers.first["first_name"]).to eq("Manoj")
   end
 end
