@@ -4,18 +4,15 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
-# Ignore bundler config.
-/.bundle
-
 # Ignore all logfiles and tempfiles.
-/log/*
+log/*
 tmp/*
-!/log/.keep
-!/tmp/.keep
+log/.keep
+tmp/.keep
 
 # Ignore uploaded files in development
-/storage/*
-/coverage/*
+storage/*
+coverage/*
 
 .byebug_history
 
